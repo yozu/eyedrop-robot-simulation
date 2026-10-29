@@ -1,0 +1,15 @@
+{
+  "reason": "saved-result aggregation fields and archival only; no training/inference/physics changes",
+  "files": [
+    {
+      "source": "scripts/summarize_synchronized_cycle.py",
+      "snapshot": "outputs/diagnostics/smolvla-synchronized-cycle-02/source-deltas/summarize_synchronized_cycle.motion-fields.py",
+      "sha256": "b3c9a3984d1dcb6bef3b20e950ccbd84417d23539ecf725e1632e9420a3270d3"
+    },
+    {
+      "source": "scripts/archive_synchronized_outputs.py",
+      "snapshot": "outputs/diagnostics/smolvla-synchronized-cycle-02/source-deltas/archive_synchronized_outputs.py",
+      "sha256": "13a6c68514ab0eac5c80ce7945179e6328d77817173ed340911dc3aaee4772b6"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {pathToFileURL,fileURLToPath} from 'node:url';
+import path from 'node:path';
+const root=process.env.PANDA_EYE_SOURCE_PREVIEW||path.dirname(fileURLToPath(import.meta.url));
+const threeUrl=pathToFileURL(path.resolve('preview/node_modules/three/build/three.module.js')).href;
+const THREE=await import(threeUrl);
+const source=readFileSync(path.join(root,'eye-target.js'),'utf8').replace("'three'",JSON.stringify(threeUrl));
+const {irisCenter}=await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`);
+const geometry=new THREE.BufferGeometry();
+geometry.setAttribute('position',new THREE.Float32BufferAttribute([
+ 10,0,0,20,0,0,30,1,0, 1,0,0,1,2,0,1,0,2, -1,0,0,-1,2,0,-1,0,2],3));
+geometry.setIndex([0,1,2,3,4,5,6,7,8]);
+geometry.addGroup(0,3,0);geometry.addGroup(3,6,1);
+const material=[new THREE.MeshBasicMaterial(),new THREE.MeshBasicMaterial()];
+material[0].name='face';material[1].name='eye';
+const mesh=new THREE.Mesh(geometry,material);mesh.name='head_2';mesh.updateMatrixWorld(true);
+const head=new THREE.Group();head.updateMatrixWorld(true);
+assert.deepEqual(irisCenter([mesh],head,[{mesh:'head_2',material:'eye',triangles:[1]}]).toArray(),[1,1,1]);
+assert.deepEqual(irisCenter([mesh],head,[{mesh:'head_2',material:'eye'}]).toArray(),[1,1,1]);
+assert.throws(()=>irisCenter([mesh],head,[{mesh:'head_2',material:'missing'}]),/虹彩/);
+assert.throws(()=>irisCenter([mesh],head,[]),/虹彩/);
+assert.throws(()=>irisCenter([mesh],head,[{mesh:'head_2',material:'eye',uv_polygon:[[0,0],[1,0],[1,1]]}]),/UV/);
+mesh.position.y=3;mesh.updateMatrixWorld(true);
+assert.deepEqual(irisCenter([mesh],head,[{mesh:'head_2',material:'eye',triangles:[1]}]).toArray(),[1,4,1]);
+console.log('採点注釈の材質群/三角形/右眼選択/座標変換/未対応注釈の拒否: 合格');

@@ -1,0 +1,5 @@
+{
+  "source": "scripts/summarize_synchronized_cycle.py",
+  "sha256": "27dd85209b7545b5e3c015dc6147017a15bcd751bd101b08b840ccc9de0a66e4",
+  "reason": "record one RGB pixel difference from teacher; enforce exact before-after model images; no inference or criteria changes"
+}

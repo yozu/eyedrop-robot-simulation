@@ -1,0 +1,16 @@
+{
+  "files": [
+    {
+      "path": "scripts/evaluate_recovered_smolvla.py",
+      "sha256": "7242b3c36c92c6dae263d13e04f84d5102faa42e4b7af7e0cc6869e822b909bd",
+      "bytes": 12582
+    },
+    {
+      "path": "scripts/summarize_synchronized_cycle.py",
+      "sha256": "594383762dd512d27726ae3d9f33f9e5fa4624afed0343f3312e8e7dfb651500",
+      "bytes": 6198
+    }
+  ],
+  "reason": "retain input image before a failing action; correct old reference wording; saved-output summary only",
+  "control_or_model_changed": false
+}

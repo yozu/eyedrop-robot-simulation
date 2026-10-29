@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ja">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>点眼ロボット — 描画・物理の接続診断</title>
+<style>
+:root{--ink:#203735;--muted:#5a716d;--paper:#f2f4ef;--accent:#176d61}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,"Yu Gothic",sans-serif}
+header{position:absolute;z-index:2;top:24px;left:32px}small{letter-spacing:.15em;color:var(--accent)}h1{font-size:24px;font-weight:500;margin:8px 0}p{font-size:13px;color:var(--muted);margin:6px 0}
+aside{position:absolute;right:24px;top:24px;z-index:2;background:#ffffffed;padding:20px;width:260px;border:1px solid #d3ddd8}
+button{border:1px solid #aabeb5;background:white;padding:8px 12px;color:var(--ink);cursor:pointer;margin:4px 3px 8px 0}button:focus-visible{outline:3px solid var(--accent)}
+label{display:block;font-size:13px;margin:12px 0 6px}input{width:100%;accent-color:var(--accent)}#status{font-size:13px;font-variant-numeric:tabular-nums}
+footer{position:absolute;bottom:24px;left:32px;font-size:12px;color:var(--muted)}canvas{display:block}
+</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<header><small>EYEDROP · LEARNED CONTROL</small><h1>画像から学習した操作を検証</h1><p>「学習済みACT」は画像＋自己状態で操作します。「正解位置で動作確認」は別の診断です。</p></header>
+<aside><div><button id="wide">全景</button><button id="face">顔の接写</button><button id="side">横から</button><button id="pause">一時停止</button></div>
+<label for="open">開眼量を手動確認</label><input id="open" type="range" min="0" max="1" step=".01" value="1">
+<button id="auto">自動まばたきに戻す</button><div id="status"></div>
+<p>ドラッグで回転・ホイールで拡大。<br>上下まぶたが連続して動きます。</p><hr><p><a href="./bottle-lab.html">押し方と滴数の単体試験 →</a></p><button id="diagnostic">正解位置で動作確認</button>
+<label><input id="hold-closed" type="checkbox" style="width:auto"> 目を閉じたままにする</label>
+<p id="robot-status">診断モード：正解位置を使用・AI未接続</p>
+<p>ボトルは模式形状。押し込みと放出は簡略モデル。正解位置の診断では液滴を拡大表示し、ACT実行では体積由来の大きさで表示。ACTの着滴は注釈済みの人物形状で採点。水平面の判定は比較用の記録です。</p></aside>
+<footer>Model © 2022 pixiv Inc. · VRM Public License 1.0 ｜ 画像ACTと正解位置の診断 ｜ <a href="./people.html">追加人物6体の確認</a></footer>
+<script type="module" src="./scene.js"></script>
+</html>

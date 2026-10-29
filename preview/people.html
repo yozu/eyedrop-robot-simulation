@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="ja">
+<meta charset="utf-8">
+<title>人物候補・まばたき確認</title>
+<style>
+:root{--paper:#edf1ec;--ink:#233d36;--accent:#187261}
+body{margin:24px;background:var(--paper);color:var(--ink);font-family:Inter,"Yu Gothic",sans-serif}
+h1{font-size:23px}p{max-width:850px;font-size:14px}select,input{margin:10px;accent-color:var(--accent)}
+canvas{display:block}a{color:var(--accent)}:focus-visible{outline:3px solid var(--accent)}
+</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<h1>人物候補・まばたき確認</h1>
+<p>素材の顔と表情の確認用です。着座・眼の位置検出・点眼判定はまだ接続していません。6体をそのまま6人の独立した評価対象としては数えません。</p>
+<label>人物<select id="model"></select></label>
+<label>閉眼量<input id="blink" type="range" min="0" max="1" step=".01" value="0"></label>
+<p id="status">読込中</p><div id="view"></div><p id="credit"></p>
+<p><a href="./assets/people/README.md">出典・利用条件・評価上の制限</a> ／ <a href="./index.html">点眼診断に戻る</a></p>
+<script type="module" src="./people.js"></script>
+</html>

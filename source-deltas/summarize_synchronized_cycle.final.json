@@ -1,0 +1,5 @@
+{
+  "source": "scripts/summarize_synchronized_cycle.py",
+  "sha256": "e58977026a05dc7c5155a49c6bb841e3c7f8a1d2c1bc6b8ddcb4c17dc51a128e",
+  "purpose": "saved-data analysis; no inference or model changes"
+}
