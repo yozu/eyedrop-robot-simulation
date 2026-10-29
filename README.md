@@ -1,56 +1,56 @@
-# 画像入力による点眼ロボット
+# Image-Based Eye-Drop Robot
 
-**日本語** | [English](README.en.md)
+[日本語](README.ja.md) | **English**
 
-カメラ画像を見ながら、市販型の目薬容器をロボットアームで操作する課題に取り組みました。目薬を自分で差しにくい人への支援を想定し、人物・ロボット・容器・滴を**シミュレータ内**に用意しています。
+This project explores using camera images to control a robot arm that handles a conventional eye-drop bottle. It is intended as a study of how a robot might assist people who have difficulty applying eye drops themselves. The person, robot, bottle, and drop are all represented **in simulation**.
 
-固定手順による点眼動作を作成し、その実演を使って既存のロボットAIを追加学習しました。実機や人体を使った検証は行っていません。
+We developed a fixed-procedure demonstration and used it to fine-tune an existing robot AI model. No experiments were conducted on a physical robot or a human subject.
 
-![固定手順による教師動作の開始場面](docs/teacher-start.png)
+![Initial scene of a fixed-procedure demonstration](docs/teacher-start.png)
 
-## どんな仕組みか
+## How it works
 
-ロボットは左右のカメラ画像、腕・指の状態、共通の作業指示を受け取り、アームの動きと容器を押す指の幅を出力します。目の正解座標や人物の識別子、容器内の滴の状態は、AIへの入力に使いません。
+The robot receives images from two cameras, the state of its arm and fingers, and a shared task instruction. It outputs arm movements and the finger width used to press the bottle. Ground-truth eye coordinates, the person's identity, and the bottle's internal drop state are not provided as AI inputs.
 
-- **シミュレーション**：PyBullet、Three.js
-- **ロボットの学習**：[LeRobot](https://github.com/huggingface/lerobot) と事前学習済みの [SmolVLA](https://huggingface.co/lerobot/smolvla_base)
-- **学習データ**：固定手順の成功例12回を記録し、学習用6回・検査用6回に分割
-- **タスク**：眼の近くに移動し、開眼を待ち、容器を押して1滴を落とし、指を開いて退避する
+- **Simulation**: PyBullet and Three.js
+- **Robot learning**: [LeRobot](https://github.com/huggingface/lerobot) and the pretrained [SmolVLA](https://huggingface.co/lerobot/smolvla_base) model
+- **Training data**: 12 successful fixed-procedure demonstrations, split into 6 for training and 6 for testing
+- **Task**: approach the eye, wait until it is open, press the bottle to release one drop, open the fingers, and retreat
 
-容器はアームに固定し、押圧と滴下は簡略化したモデルで表現しています。
+The bottle is fixed to the arm; pressing and drop release are represented by simplified models.
 
-## 実験結果
+## Results
 
-開発に使った2体の人物モデルについて、それぞれ1回ずつ、固定手順、AIの追加学習前、追加学習後を比較しました。
+We compared the fixed procedure with the AI model before and after the latest fine-tuning, using two character models that had previously been used during development. Each method was tested once per character.
 
-| 方法 | 人物モデルA | 人物モデルB |
+| Method | Character model A | Character model B |
 | --- | --- | --- |
-| 固定手順による教師 | 1滴を落とし、解除・退避 | 1滴を落とし、解除・退避 |
-| AI：追加学習前 | 滴下に至らず | 滴下に至らず |
-| AI：追加学習後 | 指幅の範囲外指令を検出し、開始0.25秒で停止 | 60秒のシミュレーション内で押圧が続かず、滴下なし |
+| Fixed-procedure demonstrator | Released one drop, released pressure, and retreated | Released one drop, released pressure, and retreated |
+| AI: before latest fine-tuning | Did not release a drop | Did not release a drop |
+| AI: after latest fine-tuning | Stopped at 0.25 seconds after an out-of-range finger-width command | Pressing was not sustained during the 60-second simulation; no drop was released |
 
-今回の追加学習前には、公開モデルから以前に600回更新した重みを使いました。追加学習後は、そこから今回の実演でさらに3,000回更新した重みです。各条件1回ずつの結果であり、一般的な成功率や初見人物への性能は示していません。
+The pre-fine-tuning comparison used weights that had already been updated 600 times from the public pretrained model. The post-fine-tuning weights received another 3,000 updates using the demonstrations in this experiment. These are single trials for each condition; they do not establish a general success rate or performance on previously unseen characters.
 
-## ファイル構成
+## Repository contents
 
-| パス | 内容 |
+| Path | Contents |
 | --- | --- |
-| `scripts/` | 実演の収集、教材の準備、学習、評価に使用したコード |
-| `outputs/runtime/review-sklearn-v1/src/` | 顔認識、物理シミュレーション、制御の実行コード |
-| `preview/` | 人物、腕、容器の描画に関するコードと素材 |
-| `source-deltas/` | 実験後に画像保存や集計へ加えた変更の記録 |
-| [CREDITS.md](CREDITS.md) | 使用した人物・椅子などの素材の出典と利用条件 |
-| [SOURCE_PROVENANCE.md](SOURCE_PROVENANCE.md) | 保存ソースと補完したコードの照合状況 |
+| `scripts/` | Code used to collect demonstrations, prepare data, train, and evaluate |
+| `outputs/runtime/review-sklearn-v1/src/` | Code for face recognition, physics simulation, and control |
+| `preview/` | Code and assets for rendering characters, the arm, and the bottle |
+| `source-deltas/` | Changes to image recording and aggregation made after the experiment |
+| [CREDITS.md](CREDITS.md) | Asset sources and usage terms, in Japanese |
+| [SOURCE_PROVENANCE.md](SOURCE_PROVENANCE.md) | Provenance and verification status of the archived and supplemented code, in Japanese |
 
-人物モデルAはpixivのVRM1_Constraint_Twist_Sample、BはSeed-san、学習に使ったもう1体のCはGodetteです。ソースや記録に残る`original`は人物Aの内部識別子です。
+Character model A is pixiv's VRM1_Constraint_Twist_Sample, model B is Seed-san, and the third model used for training is Godette. The identifier `original` in the source and records refers to model A.
 
-## 実行環境と確認方法
+## Environment and checks
 
-実験にはApple Silicon搭載Mac、Python 3.12、PyTorch 2.11、LeRobot 0.6.1、PyBullet 3.2.7、scikit-learn 1.8.0などを使用しました。
+The experiments used an Apple Silicon Mac, Python 3.12, PyTorch 2.11, LeRobot 0.6.1, PyBullet 3.2.7, scikit-learn 1.8.0, and other dependencies.
 
-このリポジトリには**実演データ、位置認識器、追加学習前後の重み、乱数状態が含まれていません**。そのため、掲載内容だけで点眼実験の結果を再現できることは確認できていません。データと重みの公開条件や配布方法も未確認です。公開モデル`smolvla_base`だけでは、比較元として使った600回更新済みの重みにはなりません。
+**The demonstration data, position estimator, weights before and after fine-tuning, and random states are not included in this repository.** Reproduction of the reported results from this repository alone has therefore not been verified. The conditions and method for distributing the data and weights have not been established. The public `smolvla_base` model alone does not provide the previously updated weights used for the comparison.
 
-Macの既存環境では、収集・学習・評価に関する主要なPythonモジュールの読み込みを確認しました。描画側の一部の単体テストは次のコマンドで実行できます。
+In the existing Mac environment, we verified that the main Python modules for collection, training, and evaluation could be imported. Some unit tests for the rendering-side code can be run as follows:
 
 ```sh
 cd preview
@@ -58,10 +58,10 @@ npm ci --ignore-scripts
 node --test anatomy-contact.test.mjs anatomy-score.test.mjs learning-conditions.test.mjs
 ```
 
-上記の確認は13件の単体テストであり、点眼の一連の動作や、別の環境での再現を保証するものではありません。
+These checks cover 13 unit tests; they do not establish that the complete eye-drop task can be reproduced or run in another environment.
 
-## 今後の課題
+## Future work
 
-AIが指幅を安定して保ち、開眼の待機から押圧、解除、退避までを連続して行えるようにする必要があります。人物が変わった場合の性能、実際の容器や液体、実時間での動作も未評価です。
+The AI must learn to maintain a stable finger width and complete the sequence from waiting for an open eye through pressing, releasing, and retreating. Performance with other characters, actual bottles and liquids, and real-time operation has not been evaluated.
 
-人物モデルなどの出典と利用条件は[CREDITS.md](CREDITS.md)を参照してください。
+For asset sources and usage terms, see [CREDITS.md](CREDITS.md) (in Japanese).

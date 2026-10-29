@@ -1,6 +1,6 @@
 # Image-Based Eye-Drop Robot
 
-[日本語](README.md) | **English**
+[日本語](README.ja.md) | **English**
 
 This project explores using camera images to control a robot arm that handles a conventional eye-drop bottle. It is intended as a study of how a robot might assist people who have difficulty applying eye drops themselves. The person, robot, bottle, and drop are all represented **in simulation**.
 
